@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	//	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
