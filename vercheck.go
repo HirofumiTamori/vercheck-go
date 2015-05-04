@@ -80,8 +80,7 @@ func GetTitleVerAndRelDate1(url string, index int) RetVal {
 	// Get Title
 	ret.Title = doc.Find(".js-current-repository").First().Text()
 	// Get Version
-	var sv = doc.Find(".tag-name").First()
-	ret.Version = sv.Text()
+	ret.Version = doc.Find(".tag-name").First().Text()
 
 	var st = doc.Find("span[class=date]").Children().Nodes[0]
 	var loc, _ = time.LoadLocation(LocationName)
@@ -109,8 +108,7 @@ func GetTitleVerAndRelDate2(url string, index int) RetVal {
 	// Get Title
 	ret.Title = doc.Find("a[class=js-current-repository]").First().Text()
 	// Get Version
-	var sv = doc.Find("span[class=css-truncate-target]").First()
-	ret.Version = sv.Text()
+	ret.Version = doc.Find("span[class=css-truncate-target]").First().Text()
 
 	// Get Release Date
 	var st = doc.Find("time").Nodes[0]
