@@ -37,6 +37,7 @@ var UrlList = []UrlListType{
 	{Url: "https://github.com/JuliaLang/julia/releases", Type: "2"},
 	{Url: "https://github.com/Araq/Nim/releases", Type: "1"},
 	{Url: "https://github.com/rust-lang/rust/releases", Type: "1"},
+	{Url: "https://github.com/elixir-lang/elixir/releases", Type: "2"},
 }
 
 var ShortTimeFormat = "2006/01/02"
