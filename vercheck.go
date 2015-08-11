@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -67,24 +68,17 @@ func PutAFormattedLine(val RetVal) {
 }
 
 func GetTitleVerAndRelDate1(url string, index int) RetVal {
-	var ret RetVal
-	// Exception handling
-	defer func() {
-		err := recover()
-		if err != nil {
-			fmt.Println("Error on proccesing " + url)
-		}
-	}()
-
-	// Obtain the content of the specified URL
 	doc, _ := goquery.NewDocument(url)
-	// Get Title
-	ret.Title = doc.Find(".js-current-repository").First().Text()
-	// Get Version
-	ret.Version = doc.Find(".tag-name").First().Text()
+	var ret RetVal
+	ret.Title = doc.Find(".container").Find("strong").First().Text()
+	var sv = doc.Find(".tag-name").First()
+	var vstr = sv.Text()
+	var re = regexp.MustCompile("^[^\\d]+(.*)")
+	var replaced = re.ReplaceAllString(vstr, "$1")
+	ret.Version = replaced
 
 	var st = doc.Find("span[class=date]").Children().Nodes[0]
-	var loc, _ = time.LoadLocation(LocationName)
+	var loc, _ = time.LoadLocation("Asia/Tokyo")
 	var tm, _ = time.Parse(time.RFC3339, st.Attr[0].Val)
 	tm = tm.In(loc) // change location
 	ret.RelDate = strings.Replace(tm.Format(ShortTimeFormat), "/", ".", -1)
@@ -95,25 +89,20 @@ func GetTitleVerAndRelDate1(url string, index int) RetVal {
 }
 
 func GetTitleVerAndRelDate2(url string, index int) RetVal {
-	var ret RetVal
-	// Exception handling
-	defer func() {
-		err := recover()
-		if err != nil {
-			fmt.Println("Error on proccesing " + url)
-		}
-	}()
-
-	// Obtain the content of the specified URL
 	doc, _ := goquery.NewDocument(url)
 	// Get Title
-	ret.Title = doc.Find("a[class=js-current-repository]").First().Text()
+	var ret RetVal
+	ret.Title = doc.Find(".container").Find("strong").First().Text()
 	// Get Version
-	ret.Version = doc.Find("span[class=css-truncate-target]").First().Text()
+	var sv = doc.Find("span[class=css-truncate-target]").First()
+	var vstr = sv.Text()
+	var re = regexp.MustCompile("^[^\\d]+(.*)")
+	var replaced = re.ReplaceAllString(vstr, "$1")
+	ret.Version = replaced
 
 	// Get Release Date
 	var st = doc.Find("time").Nodes[0]
-	var loc, _ = time.LoadLocation(LocationName)
+	var loc, _ = time.LoadLocation("Asia/Tokyo")
 	var tm, _ = time.Parse(time.RFC3339, st.Attr[0].Val)
 	tm = tm.In(loc) // change location
 	ret.RelDate = strings.Replace(tm.Format(ShortTimeFormat), "/", ".", -1)
@@ -121,6 +110,7 @@ func GetTitleVerAndRelDate2(url string, index int) RetVal {
 	ret.Index = index
 
 	return ret
+
 }
 
 func main() {
